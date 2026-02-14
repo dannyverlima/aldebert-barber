@@ -1,0 +1,447 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Aldebert Barber | Barbearia Premium</title>
+  <meta name="description" content="Aldebert Barber — barbearia premium com estética old money, tradição europeia e experiência sofisticada. Agende seu horário." />
+  <meta name="theme-color" content="#0F2E2E" />
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700&family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet" />
+
+  <!-- AOS -->
+  <link rel="stylesheet" href="https://unpkg.com/aos@2.3.4/dist/aos.css" />
+
+  <!-- Lucide Icons (pinned version for stability) -->
+  <script src="https://unpkg.com/lucide@0.460.0/dist/umd/lucide.js"></script>
+
+  <link rel="stylesheet" href="site.css" />
+</head>
+<body>
+
+  <!-- ══════════════════════════════════════════════════════
+       HEADER / NAV
+       ══════════════════════════════════════════════════════ -->
+  <header class="header" id="header">
+    <nav class="nav container">
+      <a href="#hero" class="nav__logo">
+        <span class="nav__logo-icon">&#10022;</span>
+        Aldebert<span class="gold">.</span>
+      </a>
+
+      <div class="nav__menu" id="nav-menu">
+        <ul class="nav__list">
+          <li><a href="#hero" class="nav__link">Início</a></li>
+          <li><a href="#about" class="nav__link">Sobre</a></li>
+          <li><a href="#services" class="nav__link">Serviços</a></li>
+          <li><a href="#gallery" class="nav__link">Galeria</a></li>
+          <li><a href="#booking" class="nav__link">Agendar</a></li>
+          <li><a href="#contact" class="nav__link">Contato</a></li>
+        </ul>
+        <button class="nav__close" id="nav-close" aria-label="Fechar menu">
+          <i data-lucide="x"></i>
+        </button>
+      </div>
+
+      <div class="nav__actions">
+        <a href="#booking" class="btn btn--gold nav__cta">Agendar Horário</a>
+        <button class="nav__toggle" id="nav-toggle" aria-label="Abrir menu">
+          <i data-lucide="menu"></i>
+        </button>
+      </div>
+    </nav>
+  </header>
+
+  <main>
+
+    <!-- ══════════════════════════════════════════════════════
+         1 · HERO SECTION
+         ══════════════════════════════════════════════════════ -->
+    <section class="hero" id="hero">
+      <div class="hero__parallax" id="hero-parallax"></div>
+      <div class="hero__overlay"></div>
+
+      <div class="hero__content container" data-aos="fade-up" data-aos-duration="1200">
+        <p class="tag">Barbearia Premium &middot; Est. 2016</p>
+        <h1 class="hero__title">Aldebert<br /><span class="gold">Barber</span></h1>
+        <p class="hero__subtitle">
+          Sofisticação europeia, rituais clássicos e acabamento moderno<br />
+          para homens que valorizam excelência.
+        </p>
+        <div class="hero__buttons">
+          <a href="#booking" class="btn btn--gold btn--lg">
+            <i data-lucide="calendar" class="btn__icon"></i> Agendar Horário
+          </a>
+          <a href="#services" class="btn btn--outline btn--lg">
+            <i data-lucide="scissors" class="btn__icon"></i> Nossos Serviços
+          </a>
+        </div>
+      </div>
+
+      <div class="hero__stats container" data-aos="fade-up" data-aos-delay="400">
+        <div class="stat">
+          <span class="stat__number">10+</span>
+          <span class="stat__label">Anos de Tradição</span>
+        </div>
+        <div class="stat">
+          <span class="stat__number">5.000+</span>
+          <span class="stat__label">Clientes Atendidos</span>
+        </div>
+        <div class="stat">
+          <span class="stat__number">Premium</span>
+          <span class="stat__label">Ambiente Exclusivo</span>
+        </div>
+      </div>
+
+      <a href="#about" class="hero__scroll" aria-label="Rolar para baixo">
+        <i data-lucide="chevron-down"></i>
+      </a>
+    </section>
+
+    <!-- ══════════════════════════════════════════════════════
+         2 · SOBRE
+         ══════════════════════════════════════════════════════ -->
+    <section class="section about" id="about">
+      <div class="container about__grid">
+        <div class="about__image" data-aos="fade-right" data-aos-duration="1000">
+          <img src="https://images.unsplash.com/photo-1585747860019-8901cecc7dcc?auto=format&fit=crop&w=900&q=80" alt="Interior sofisticado da barbearia Aldebert" loading="lazy" />
+          <div class="about__badge">
+            <span>&#10022;</span>
+            <p>Desde<br /><strong>2016</strong></p>
+          </div>
+        </div>
+        <div class="about__text" data-aos="fade-left" data-aos-duration="1000">
+          <p class="tag">Nossa História</p>
+          <h2>Tradição, precisão<br />e <span class="gold">ritual</span></h2>
+          <p>
+            A <strong>Aldebert Barber</strong> nasceu da paixão pela estética europeia clássica e
+            pelo cuidado minucioso. Cada atendimento é um ritual de refinamento — do corte social
+            <em>old money</em> ao fade contemporâneo — sempre com técnicas artesanais e produtos premium.
+          </p>
+          <p>
+            Nosso espaço foi concebido para transmitir exclusividade: madeira escura, dourado
+            envelhecido, tons verde profundo e um atendimento personalizado que respeita o tempo
+            e o estilo de cada cliente.
+          </p>
+          <div class="about__features">
+            <div class="about__feature"><i data-lucide="award"></i><span>Profissionais Premiados</span></div>
+            <div class="about__feature"><i data-lucide="gem"></i><span>Produtos Importados</span></div>
+            <div class="about__feature"><i data-lucide="shield-check"></i><span>Higiene Impecável</span></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ══════════════════════════════════════════════════════
+         3 · SERVIÇOS
+         ══════════════════════════════════════════════════════ -->
+    <section class="section services" id="services">
+      <div class="container">
+        <div class="section__header" data-aos="fade-up">
+          <p class="tag">Serviços Premium</p>
+          <h2>Clássico &amp; <span class="gold">Contemporâneo</span></h2>
+          <p class="section__desc">Cada serviço é um ritual de sofisticação, executado com precisão artesanal.</p>
+        </div>
+
+        <div class="services__grid">
+          <article class="service-card" data-aos="fade-up" data-aos-delay="0">
+            <div class="service-card__img">
+              <img src="https://images.unsplash.com/photo-1599351431202-1e0f0137899a?auto=format&fit=crop&w=800&q=80" alt="Corte Social Old Money" loading="lazy" />
+              <span class="service-card__price">R$ 90</span>
+            </div>
+            <div class="service-card__body">
+              <h3>Corte Social <span class="gold">(Old Money)</span></h3>
+              <p>Linhas clássicas, volume controlado e acabamento de alfaiataria. O corte dos cavalheiros.</p>
+              <button class="btn btn--gold btn--sm" data-select-service="Corte Social">
+                <i data-lucide="calendar-plus" class="btn__icon"></i> Agendar
+              </button>
+            </div>
+          </article>
+
+          <article class="service-card" data-aos="fade-up" data-aos-delay="100">
+            <div class="service-card__img">
+              <img src="https://images.unsplash.com/photo-1621605815971-fbc98d665033?auto=format&fit=crop&w=800&q=80" alt="Corte Moderno Fade" loading="lazy" />
+              <span class="service-card__price">R$ 110</span>
+            </div>
+            <div class="service-card__body">
+              <h3>Corte Moderno <span class="gold">(Fade)</span></h3>
+              <p>Degradê preciso, textura contemporânea e finalização refinada. Estilo e atitude.</p>
+              <button class="btn btn--gold btn--sm" data-select-service="Corte Moderno">
+                <i data-lucide="calendar-plus" class="btn__icon"></i> Agendar
+              </button>
+            </div>
+          </article>
+
+          <article class="service-card" data-aos="fade-up" data-aos-delay="200">
+            <div class="service-card__img">
+              <img src="https://images.unsplash.com/photo-1622287162716-f311baa1a2b8?auto=format&fit=crop&w=800&q=80" alt="Barba Tradicional" loading="lazy" />
+              <span class="service-card__price">R$ 70</span>
+            </div>
+            <div class="service-card__body">
+              <h3>Barba <span class="gold">Tradicional</span></h3>
+              <p>Toalha quente, navalha, óleos nobres e finalização impecável. O ritual da barba perfeita.</p>
+              <button class="btn btn--gold btn--sm" data-select-service="Barba Tradicional">
+                <i data-lucide="calendar-plus" class="btn__icon"></i> Agendar
+              </button>
+            </div>
+          </article>
+
+          <article class="service-card" data-aos="fade-up" data-aos-delay="300">
+            <div class="service-card__img">
+              <img src="https://images.unsplash.com/photo-1503951914875-452162b0f3f1?auto=format&fit=crop&w=800&q=80" alt="Combo Corte + Barba" loading="lazy" />
+              <span class="service-card__price">R$ 150</span>
+            </div>
+            <div class="service-card__body">
+              <h3>Combo <span class="gold">Corte + Barba</span></h3>
+              <p>Experiência completa com harmonização do visual e acabamento premium. O melhor dos dois mundos.</p>
+              <button class="btn btn--gold btn--sm" data-select-service="Combo Corte + Barba">
+                <i data-lucide="calendar-plus" class="btn__icon"></i> Agendar
+              </button>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- ══════════════════════════════════════════════════════
+         PARALLAX DIVIDER
+         ══════════════════════════════════════════════════════ -->
+    <div class="parallax-divider" id="parallax-divider">
+      <div class="parallax-divider__overlay"></div>
+      <div class="parallax-divider__content container" data-aos="zoom-in" data-aos-duration="800">
+        <p class="tag">Experiência Aldebert</p>
+        <h2>&ldquo;O verdadeiro luxo está nos <span class="gold">detalhes</span>.&rdquo;</h2>
+      </div>
+    </div>
+
+    <!-- ══════════════════════════════════════════════════════
+         4 · GALERIA
+         ══════════════════════════════════════════════════════ -->
+    <section class="section gallery" id="gallery">
+      <div class="container">
+        <div class="section__header" data-aos="fade-up">
+          <p class="tag">Galeria</p>
+          <h2>Atmosfera &amp; <span class="gold">Estilo</span></h2>
+          <p class="section__desc">Clique em qualquer imagem para ampliar.</p>
+        </div>
+
+        <div class="gallery__grid">
+          <div class="gallery__item gallery__item--tall" data-aos="fade-up" data-aos-delay="0">
+            <img src="https://images.unsplash.com/photo-1585747860019-8901cecc7dcc?auto=format&fit=crop&w=700&q=80" alt="Ambiente da barbearia" loading="lazy" />
+          </div>
+          <div class="gallery__item" data-aos="fade-up" data-aos-delay="100">
+            <img src="https://images.unsplash.com/photo-1599351431202-1e0f0137899a?auto=format&fit=crop&w=700&q=80" alt="Corte clássico" loading="lazy" />
+          </div>
+          <div class="gallery__item" data-aos="fade-up" data-aos-delay="150">
+            <img src="https://images.unsplash.com/photo-1621605815971-fbc98d665033?auto=format&fit=crop&w=700&q=80" alt="Fade preciso" loading="lazy" />
+          </div>
+          <div class="gallery__item gallery__item--wide" data-aos="fade-up" data-aos-delay="200">
+            <img src="https://images.unsplash.com/photo-1503951914875-452162b0f3f1?auto=format&fit=crop&w=700&q=80" alt="Detalhes do corte" loading="lazy" />
+          </div>
+          <div class="gallery__item" data-aos="fade-up" data-aos-delay="250">
+            <img src="https://images.unsplash.com/photo-1622287162716-f311baa1a2b8?auto=format&fit=crop&w=700&q=80" alt="Barba artesanal" loading="lazy" />
+          </div>
+          <div class="gallery__item" data-aos="fade-up" data-aos-delay="300">
+            <img src="https://images.unsplash.com/photo-1596728325488-58c87691e9af?auto=format&fit=crop&w=700&q=80" alt="Acabamento refinado" loading="lazy" />
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ══════════════════════════════════════════════════════
+         5 · AGENDAMENTO
+         ══════════════════════════════════════════════════════ -->
+    <section class="section booking" id="booking">
+      <div class="container booking__grid">
+        <div class="booking__info" data-aos="fade-right" data-aos-duration="1000">
+          <p class="tag">Agendamento Online</p>
+          <h2>Reserve o seu <span class="gold">ritual</span></h2>
+          <p>Escolha o serviço, data e horário. Nosso sistema confirma o agendamento em tempo real, bloqueando horários já reservados.</p>
+          <ul class="booking__perks">
+            <li><i data-lucide="check-circle-2"></i> Confirmação instantânea</li>
+            <li><i data-lucide="lock"></i> Bloqueio automático de horários</li>
+            <li><i data-lucide="phone"></i> Contato direto com a barbearia</li>
+            <li><i data-lucide="star"></i> Experiência premium garantida</li>
+          </ul>
+        </div>
+
+        <form class="booking__form" id="booking-form" data-aos="fade-left" data-aos-duration="1000">
+          <h3><i data-lucide="calendar-check"></i> Novo Agendamento</h3>
+
+          <div class="form__group">
+            <label for="b-service">Serviço</label>
+            <select id="b-service" required>
+              <option value="">Escolha um serviço</option>
+              <option value="Corte Social">Corte Social (Old Money) — R$ 90</option>
+              <option value="Corte Moderno">Corte Moderno (Fade) — R$ 110</option>
+              <option value="Barba Tradicional">Barba Tradicional — R$ 70</option>
+              <option value="Combo Corte + Barba">Combo Corte + Barba — R$ 150</option>
+            </select>
+          </div>
+
+          <div class="form__row">
+            <div class="form__group">
+              <label for="b-date">Data</label>
+              <input type="date" id="b-date" required />
+            </div>
+            <div class="form__group">
+              <label for="b-time">Horário</label>
+              <select id="b-time" required>
+                <option value="">Selecione a data primeiro</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="form__group">
+            <label for="b-name">Nome completo</label>
+            <input type="text" id="b-name" placeholder="Seu nome" required />
+          </div>
+
+          <div class="form__group">
+            <label for="b-phone">Telefone / WhatsApp</label>
+            <input type="tel" id="b-phone" placeholder="(00) 00000-0000" required />
+          </div>
+
+          <button type="submit" class="btn btn--gold btn--lg btn--full">
+            <i data-lucide="check" class="btn__icon"></i> Confirmar Agendamento
+          </button>
+
+          <div class="form__feedback" id="booking-feedback"></div>
+        </form>
+      </div>
+    </section>
+
+    <!-- ══════════════════════════════════════════════════════
+         6 · ADMIN
+         ══════════════════════════════════════════════════════ -->
+    <section class="section admin" id="admin">
+      <div class="container">
+        <div class="section__header" data-aos="fade-up">
+          <p class="tag">Área Restrita</p>
+          <h2>Painel <span class="gold">Administrativo</span></h2>
+          <p class="section__desc">Acesso exclusivo para administradores e donos da barbearia.</p>
+        </div>
+
+        <div class="admin__grid">
+          <div class="admin__login-wrap" id="admin-login-wrap" data-aos="fade-right">
+            <form class="admin__form" id="admin-login-form">
+              <h3><i data-lucide="shield"></i> Login Seguro</h3>
+              <div class="form__group">
+                <label for="a-email">E-mail</label>
+                <input type="email" id="a-email" placeholder="admin@aldebert.com" required />
+              </div>
+              <div class="form__group">
+                <label for="a-pass">Senha</label>
+                <input type="password" id="a-pass" placeholder="••••••••" required />
+              </div>
+              <button type="submit" class="btn btn--gold btn--full">
+                <i data-lucide="log-in" class="btn__icon"></i> Entrar
+              </button>
+              <div class="form__feedback" id="admin-feedback"></div>
+              <p class="admin__hint">Demo: admin@aldebert.com / Aldebert2026!</p>
+            </form>
+          </div>
+
+          <div class="admin__dashboard" id="admin-dashboard" data-aos="fade-left">
+            <div class="admin__dash-header">
+              <h3><i data-lucide="layout-dashboard"></i> Dashboard</h3>
+              <button class="btn btn--outline btn--sm" id="admin-logout" style="display:none;">
+                <i data-lucide="log-out" class="btn__icon"></i> Sair
+              </button>
+            </div>
+            <div class="admin__dash-body" id="admin-dash-body">
+              <div class="admin__empty">
+                <i data-lucide="lock"></i>
+                <p>Faça login para visualizar e gerenciar os agendamentos.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ══════════════════════════════════════════════════════
+         7 · CONTATO
+         ══════════════════════════════════════════════════════ -->
+    <section class="section contact" id="contact">
+      <div class="container contact__grid">
+        <div class="contact__info" data-aos="fade-right" data-aos-duration="1000">
+          <p class="tag">Visite-nos</p>
+          <h2>Endereço &amp; <span class="gold">Contato</span></h2>
+          <p>Rua Saint James, 120 &middot; Jardins &middot; São Paulo<br />Segunda a sábado &middot; 09h às 20h</p>
+
+          <div class="contact__details">
+            <div class="contact__item"><i data-lucide="map-pin"></i><span>Jardins, São Paulo – SP</span></div>
+            <div class="contact__item"><i data-lucide="phone"></i><span>(11) 99999-9999</span></div>
+            <div class="contact__item"><i data-lucide="mail"></i><span>contato@aldebert.com</span></div>
+            <div class="contact__item"><i data-lucide="instagram"></i><span>@aldebertbarber</span></div>
+          </div>
+
+          <div class="contact__buttons">
+            <a href="tel:+5511999999999" class="btn btn--gold">
+              <i data-lucide="phone" class="btn__icon"></i> Ligar Agora
+            </a>
+            <a href="https://wa.me/5511999999999" target="_blank" class="btn btn--outline">
+              <i data-lucide="message-circle" class="btn__icon"></i> WhatsApp
+            </a>
+          </div>
+        </div>
+
+        <div class="contact__card" data-aos="fade-left" data-aos-duration="1000">
+          <div class="contact__card-inner">
+            <span class="contact__card-badge">&#10022;</span>
+            <h3>Experiência<br /><span class="gold">Aldebert</span></h3>
+            <p>Atendimento exclusivo, bebidas de cortesia e ambientes privativos. Uma barbearia pensada para quem valoriza tradição e modernidade.</p>
+            <ul>
+              <li><i data-lucide="check"></i> Equipe especializada</li>
+              <li><i data-lucide="check"></i> Produtos importados</li>
+              <li><i data-lucide="check"></i> Atendimento sob medida</li>
+              <li><i data-lucide="check"></i> Ambiente climatizado</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ══════════════════════════════════════════════════════
+       FOOTER
+       ══════════════════════════════════════════════════════ -->
+  <footer class="footer">
+    <div class="container footer__inner">
+      <a href="#hero" class="footer__logo">Aldebert<span class="gold">.</span></a>
+      <p>&copy; 2026 Aldebert Barber. Todos os direitos reservados.</p>
+      <div class="footer__socials">
+        <a href="#" aria-label="Instagram"><i data-lucide="instagram"></i></a>
+        <a href="#" aria-label="Facebook"><i data-lucide="facebook"></i></a>
+        <a href="#" aria-label="WhatsApp"><i data-lucide="message-circle"></i></a>
+      </div>
+    </div>
+  </footer>
+
+  <!-- ══════════════════════════════════════════════════════
+       LIGHTBOX
+       ══════════════════════════════════════════════════════ -->
+  <div class="lightbox" id="lightbox" aria-hidden="true">
+    <button class="lightbox__close" id="lightbox-close" aria-label="Fechar"><i data-lucide="x"></i></button>
+    <button class="lightbox__prev" id="lightbox-prev" aria-label="Anterior"><i data-lucide="chevron-left"></i></button>
+    <button class="lightbox__next" id="lightbox-next" aria-label="Próxima"><i data-lucide="chevron-right"></i></button>
+    <img class="lightbox__img" id="lightbox-img" src="" alt="Imagem ampliada" />
+  </div>
+
+  <!-- ══════════════════════════════════════════════════════
+       BACK TO TOP
+       ══════════════════════════════════════════════════════ -->
+  <button class="back-to-top" id="back-to-top" aria-label="Voltar ao topo">
+    <i data-lucide="arrow-up"></i>
+  </button>
+
+  <!-- Scripts -->
+  <script src="https://unpkg.com/aos@2.3.4/dist/aos.js"></script>
+  <script src="site.js"></script>
+</body>
+</html>

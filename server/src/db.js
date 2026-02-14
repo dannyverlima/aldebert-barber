@@ -1,0 +1,26 @@
+import pg from "pg";
+import dotenv from "dotenv";
+
+dotenv.config();
+
+const { Pool } = pg;
+
+const pool = new Pool({
+  connectionString: process.env.DATABASE_URL,
+});
+
+pool.on("error", (err) => {
+  console.error("Erro inesperado no pool do PostgreSQL:", err.message);
+});
+
+export const query = (text, params) => pool.query(text, params);
+
+export const connect = async () => {
+  try {
+    const client = await pool.connect();
+    console.log("✓ Database connected");
+    client.release();
+  } catch (err) {
+    console.error("✕ Erro ao conectar ao banco:", err.message);
+  }
+};
