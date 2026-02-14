@@ -300,6 +300,26 @@ document.addEventListener("DOMContentLoaded", () => {
     if (userLoggedArea) userLoggedArea.style.display = isAuth ? "block" : "none";
     if (userNameDisplay && state.user) userNameDisplay.textContent = state.user.name;
 
+    // Nav login button & user indicator
+    const navLoginBtn = $("#nav-login-btn");
+    const navUserIndicator = $("#nav-user-indicator");
+    const navUserName = $("#nav-user-name");
+    const navLoginLink = $("#nav-login-link");
+    const anyLoggedIn = isLoggedIn();
+
+    if (navLoginBtn) navLoginBtn.style.display = anyLoggedIn ? "none" : "";
+    if (navUserIndicator) navUserIndicator.style.display = anyLoggedIn ? "flex" : "none";
+    if (navUserName && state.user) navUserName.textContent = state.user.name;
+    if (navLoginLink) {
+      if (anyLoggedIn) {
+        navLoginLink.textContent = state.user?.name || "Minha Conta";
+        navLoginLink.href = isAdmin() ? "#admin" : "#user-auth";
+      } else {
+        navLoginLink.textContent = "Login";
+        navLoginLink.href = "#user-auth";
+      }
+    }
+
     if (isAuth && state.user) {
       const bNameEl = $("#b-name");
       const bPhoneEl = $("#b-phone");
@@ -307,6 +327,15 @@ document.addEventListener("DOMContentLoaded", () => {
       if (bPhoneEl && state.user.phone) bPhoneEl.value = state.user.phone;
     }
     if (window.lucide) lucide.createIcons();
+  }
+
+  // Nav user indicator click → go to user section
+  const navUserIndicatorEl = $("#nav-user-indicator");
+  if (navUserIndicatorEl) {
+    navUserIndicatorEl.addEventListener("click", () => {
+      const target = isAdmin() ? "#admin" : "#user-auth";
+      document.querySelector(target)?.scrollIntoView({ behavior: "smooth" });
+    });
   }
 
   /* ═══════════════════════════════════════════════════════
@@ -469,6 +498,13 @@ document.addEventListener("DOMContentLoaded", () => {
     if (adminLoginWrap) adminLoginWrap.style.display = "none";
     if (adminFullDash) adminFullDash.style.display = "block";
     if (dashGreeting && state.user) dashGreeting.textContent = `Olá, ${state.user.name || "Admin"}`;
+    // Update nav indicator for admin
+    const navLoginBtn = $("#nav-login-btn");
+    const navUserIndicator = $("#nav-user-indicator");
+    const navUserName = $("#nav-user-name");
+    if (navLoginBtn) navLoginBtn.style.display = "none";
+    if (navUserIndicator) navUserIndicator.style.display = "flex";
+    if (navUserName && state.user) navUserName.textContent = state.user.name || "Admin";
     loadDashboardData();
     if (window.lucide) lucide.createIcons();
   }
@@ -477,6 +513,11 @@ document.addEventListener("DOMContentLoaded", () => {
     if (adminLoginWrap) adminLoginWrap.style.display = "block";
     if (adminFullDash) adminFullDash.style.display = "none";
     hideFeedback(adminFeedback);
+    // Reset nav indicator
+    const navLoginBtn = $("#nav-login-btn");
+    const navUserIndicator = $("#nav-user-indicator");
+    if (navLoginBtn) navLoginBtn.style.display = "";
+    if (navUserIndicator) navUserIndicator.style.display = "none";
   }
 
   function getTodayStr() {

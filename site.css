@@ -141,6 +141,30 @@ p  { color:rgba(245,241,233,.78); }
 .nav__close { display:none; position:absolute; top:20px; right:20px; background:none; border:none; color:var(--beige); }
 .nav__close i { width:24px; height:24px; }
 
+/* Nav user indicator */
+.nav__user {
+  display:flex; align-items:center; gap:10px;
+  cursor:pointer; padding:6px 14px;
+  border-radius:999px;
+  border:1px solid var(--border-l);
+  background:rgba(216,195,165,.06);
+  transition:all var(--transition);
+}
+.nav__user:hover {
+  background:rgba(216,195,165,.12);
+  border-color:var(--gold);
+}
+.nav__user-avatar {
+  width:30px; height:30px; border-radius:50%;
+  background:rgba(179,154,106,.2);
+  display:flex; align-items:center; justify-content:center;
+}
+.nav__user-avatar i { width:16px; height:16px; color:var(--gold); }
+.nav__user-name {
+  font-size:.82rem; font-weight:600; color:var(--beige);
+  max-width:120px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;
+}
+
 /* ═══════════════════════════════════════════════════════
    1 · HERO
    ═══════════════════════════════════════════════════════ */
@@ -656,6 +680,7 @@ select option { background:var(--charcoal); }
   .nav__close { display:block; }
   .nav__toggle { display:block; }
   .nav__cta { display:none; }
+  .nav__user { display:none !important; }
 
   .about__grid { grid-template-columns:1fr; gap:40px; }
   .about__badge { bottom:-14px;right:14px; width:90px;height:90px; }

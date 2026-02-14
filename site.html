@@ -39,6 +39,7 @@
           <li><a href="#services" class="nav__link">Serviços</a></li>
           <li><a href="#gallery" class="nav__link">Galeria</a></li>
           <li><a href="#booking" class="nav__link">Agendar</a></li>
+          <li><a href="#user-auth" class="nav__link" id="nav-login-link">Login</a></li>
           <li><a href="#contact" class="nav__link">Contato</a></li>
         </ul>
         <button class="nav__close" id="nav-close" aria-label="Fechar menu">
@@ -48,6 +49,15 @@
 
       <div class="nav__actions">
         <a href="#booking" class="btn btn--gold nav__cta">Agendar Horário</a>
+        <!-- Login button (visible when not logged in) -->
+        <a href="#user-auth" class="btn btn--outline nav__cta nav__login-btn" id="nav-login-btn">
+          <i data-lucide="log-in" class="btn__icon"></i> Login
+        </a>
+        <!-- User indicator (visible when logged in) -->
+        <div class="nav__user" id="nav-user-indicator" style="display:none;">
+          <div class="nav__user-avatar"><i data-lucide="user"></i></div>
+          <span class="nav__user-name" id="nav-user-name"></span>
+        </div>
         <button class="nav__toggle" id="nav-toggle" aria-label="Abrir menu">
           <i data-lucide="menu"></i>
         </button>
@@ -416,7 +426,7 @@
             <div class="form__group">
               <label for="a-pass">Senha</label>
               <input type="password" id="a-pass" placeholder="••••••••" required />
-            </div>
+            </div> 
             <button type="submit" class="btn btn--gold btn--full">
               <i data-lucide="log-in" class="btn__icon"></i> Entrar
             </button>
