@@ -405,41 +405,134 @@
           <p class="section__desc">Acesso exclusivo para administradores e donos da barbearia.</p>
         </div>
 
-        <div class="admin__grid">
-          <div class="admin__login-wrap" id="admin-login-wrap" data-aos="fade-right">
-            <form class="admin__form" id="admin-login-form">
-              <h3><i data-lucide="shield"></i> Login Seguro</h3>
-              <div class="form__group">
-                <label for="a-email">E-mail</label>
-                <input type="email" id="a-email" placeholder="admin@aldebert.com" required />
-              </div>
-              <div class="form__group">
-                <label for="a-pass">Senha</label>
-                <input type="password" id="a-pass" placeholder="••••••••" required />
-              </div>
-              <button type="submit" class="btn btn--gold btn--full">
-                <i data-lucide="log-in" class="btn__icon"></i> Entrar
-              </button>
-              <div class="form__feedback" id="admin-feedback"></div>
-              <p class="admin__hint">Acesso: admin@aldebert.com / Aldebert2026!</p>
-            </form>
+        <!-- LOGIN (oculto quando logado) -->
+        <div class="admin__login-wrap" id="admin-login-wrap" data-aos="fade-up">
+          <form class="admin__form" id="admin-login-form">
+            <h3><i data-lucide="shield"></i> Login Seguro</h3>
+            <div class="form__group">
+              <label for="a-email">E-mail</label>
+              <input type="email" id="a-email" placeholder="admin@aldebert.com" required />
+            </div>
+            <div class="form__group">
+              <label for="a-pass">Senha</label>
+              <input type="password" id="a-pass" placeholder="••••••••" required />
+            </div>
+            <button type="submit" class="btn btn--gold btn--full">
+              <i data-lucide="log-in" class="btn__icon"></i> Entrar
+            </button>
+            <div class="form__feedback" id="admin-feedback"></div>
+            <p class="admin__hint">Acesso restrito aos administradores</p>
+          </form>
+        </div>
+
+        <!-- DASHBOARD COMPLETO (aparece quando logado) -->
+        <div class="admin__full-dashboard" id="admin-full-dashboard" style="display:none;" data-aos="fade-up">
+          <!-- Cabeçalho do dashboard -->
+          <div class="dash__top-bar">
+            <div class="dash__welcome">
+              <h3><i data-lucide="layout-dashboard"></i> Dashboard</h3>
+              <span class="dash__greeting" id="dash-greeting">Olá, Admin</span>
+            </div>
+            <button class="btn btn--outline btn--sm" id="admin-logout">
+              <i data-lucide="log-out" class="btn__icon"></i> Sair
+            </button>
           </div>
 
-          <div class="admin__dashboard" id="admin-dashboard" data-aos="fade-left">
-            <div class="admin__dash-header">
-              <h3><i data-lucide="layout-dashboard"></i> Dashboard</h3>
-              <button class="btn btn--outline btn--sm" id="admin-logout" style="display:none;">
-                <i data-lucide="log-out" class="btn__icon"></i> Sair
-              </button>
+          <!-- Cards de resumo -->
+          <div class="dash__summary">
+            <div class="dash__card">
+              <div class="dash__card-icon"><i data-lucide="calendar-check"></i></div>
+              <div class="dash__card-info">
+                <span class="dash__card-number" id="dash-today-count">0</span>
+                <span class="dash__card-label">Clientes Hoje</span>
+              </div>
             </div>
-            <div class="admin__dash-body" id="admin-dash-body">
+            <div class="dash__card">
+              <div class="dash__card-icon"><i data-lucide="clock"></i></div>
+              <div class="dash__card-info">
+                <span class="dash__card-number" id="dash-available-count">0</span>
+                <span class="dash__card-label">Horários Livres Hoje</span>
+              </div>
+            </div>
+            <div class="dash__card">
+              <div class="dash__card-icon"><i data-lucide="users"></i></div>
+              <div class="dash__card-info">
+                <span class="dash__card-number" id="dash-total-clients">0</span>
+                <span class="dash__card-label">Clientes Cadastrados</span>
+              </div>
+            </div>
+            <div class="dash__card">
+              <div class="dash__card-icon"><i data-lucide="trophy"></i></div>
+              <div class="dash__card-info">
+                <span class="dash__card-number" id="dash-loyalty-ready">0</span>
+                <span class="dash__card-label">Fidelidade Completa</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Abas -->
+          <div class="dash__tabs">
+            <button class="dash__tab active" data-tab="today">
+              <i data-lucide="sun"></i> Hoje
+            </button>
+            <button class="dash__tab" data-tab="appointments">
+              <i data-lucide="calendar"></i> Agendamentos
+            </button>
+            <button class="dash__tab" data-tab="loyalty">
+              <i data-lucide="heart"></i> Fidelidade
+            </button>
+          </div>
+
+          <!-- Painel: HOJE -->
+          <div class="dash__panel" id="panel-today">
+            <div class="dash__panel-section">
+              <h4><i data-lucide="calendar-check"></i> Clientes de Hoje</h4>
+              <div id="today-appointments">
+                <div class="admin__empty">
+                  <i data-lucide="coffee"></i>
+                  <p>Nenhum agendamento para hoje.</p>
+                </div>
+              </div>
+            </div>
+            <div class="dash__panel-section">
+              <h4><i data-lucide="clock"></i> Horários Disponíveis Hoje</h4>
+              <div class="dash__time-slots" id="today-available-slots">
+                <p style="color:rgba(245,241,233,.5);">Carregando...</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Painel: AGENDAMENTOS -->
+          <div class="dash__panel" id="panel-appointments" style="display:none;">
+            <h4><i data-lucide="list"></i> Todos os Agendamentos</h4>
+            <div id="all-appointments">
               <div class="admin__empty">
-                <i data-lucide="lock"></i>
-                <p>Faça login para visualizar e gerenciar os agendamentos.</p>
+                <i data-lucide="calendar-x"></i>
+                <p>Nenhum agendamento encontrado.</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Painel: FIDELIDADE -->
+          <div class="dash__panel" id="panel-loyalty" style="display:none;">
+            <div class="dash__loyalty-header">
+              <h4><i data-lucide="heart"></i> Programa de Fidelidade</h4>
+              <p class="dash__loyalty-desc">Cada cliente acumula cortes. Ao completar <strong class="gold">10 cortes</strong>, ganha um corte grátis!</p>
+            </div>
+            <div class="dash__loyalty-search">
+              <div class="form__group" style="margin-bottom:0;">
+                <input type="text" id="loyalty-search" placeholder="Buscar cliente por nome ou e-mail..." />
+              </div>
+            </div>
+            <div id="loyalty-clients-list">
+              <div class="admin__empty">
+                <i data-lucide="users"></i>
+                <p>Carregando clientes...</p>
               </div>
             </div>
           </div>
         </div>
+
       </div>
     </section>
 

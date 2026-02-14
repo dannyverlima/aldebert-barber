@@ -8,6 +8,7 @@ import path from "path";
 import { fileURLToPath } from "url";
 import authRoutes from "./routes/auth.js";
 import appointmentsRoutes from "./routes/appointments.js";
+import loyaltyRoutes from "./routes/loyalty.js";
 import { query } from "./db.js";
 
 dotenv.config();
@@ -35,6 +36,7 @@ app.get("/api/status", (req, res) => {
 
 app.use("/api/auth", authRoutes);
 app.use("/api", appointmentsRoutes);
+app.use("/api/loyalty", loyaltyRoutes);
 
 // Fallback: serve site.html for root and unknown non-API routes
 app.use((req, res) => {
@@ -113,7 +115,19 @@ const initDatabase = async () => {
         UNIQUE (date, time)
       )
     `);
-    console.log("✓ Tabelas do banco criadas (admins, users, appointments)");
+    // Tabela de fidelidade (programa de 10 cortes)
+    await query(`
+      CREATE TABLE IF NOT EXISTS loyalty (
+        id SERIAL PRIMARY KEY,
+        user_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+        cuts_completed INTEGER NOT NULL DEFAULT 0,
+        reward_claimed BOOLEAN NOT NULL DEFAULT FALSE,
+        created_at TIMESTAMP NOT NULL DEFAULT NOW(),
+        updated_at TIMESTAMP NOT NULL DEFAULT NOW(),
+        UNIQUE (user_id)
+      )
+    `);
+    console.log("✓ Tabelas do banco criadas (admins, users, appointments, loyalty)");
   } catch (err) {
     console.error("✕ Erro ao inicializar banco de dados:", err.message);
     console.log("⚠ O servidor continuará rodando sem banco de dados.");

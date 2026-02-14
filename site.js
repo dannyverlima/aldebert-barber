@@ -404,7 +404,7 @@ document.addEventListener("DOMContentLoaded", () => {
       if (bDate) bDate.min = todayStr();
       bTime.innerHTML = '<option value="">Selecione a data primeiro</option>';
 
-      if (isAdmin()) renderAdminDashboard();
+      if (isAdmin()) loadDashboardData();
     } catch (err) {
       showFeedback(bFeedback, err.message || "Erro ao agendar. Tente novamente.", "error");
       loadAvailableTimes();
@@ -412,13 +412,28 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   /* ═══════════════════════════════════════════════════════
-     7 · ADMIN SYSTEM (conectado à API)
+     7 · ADMIN SYSTEM (conectado à API — Dashboard Completo)
      ═══════════════════════════════════════════════════════ */
-  const adminForm     = $("#admin-login-form");
-  const adminFeedback = $("#admin-feedback");
-  const adminDashBody = $("#admin-dash-body");
-  const adminLogout   = $("#admin-logout");
+  const adminForm        = $("#admin-login-form");
+  const adminFeedback    = $("#admin-feedback");
+  const adminLoginWrap   = $("#admin-login-wrap");
+  const adminFullDash    = $("#admin-full-dashboard");
+  const adminLogout      = $("#admin-logout");
+  const dashGreeting     = $("#dash-greeting");
 
+  // Tab switching
+  $$(".dash__tab").forEach(tab => {
+    tab.addEventListener("click", () => {
+      $$(".dash__tab").forEach(t => t.classList.remove("active"));
+      tab.classList.add("active");
+      const target = tab.dataset.tab;
+      $$(".dash__panel").forEach(p => p.style.display = "none");
+      const panel = $(`#panel-${target}`);
+      if (panel) panel.style.display = "block";
+    });
+  });
+
+  // Admin login
   if (adminForm) adminForm.addEventListener("submit", async e => {
     e.preventDefault();
     hideFeedback(adminFeedback);
@@ -438,8 +453,7 @@ document.addEventListener("DOMContentLoaded", () => {
       });
       saveAuth(data.token, data.user);
       showFeedback(adminFeedback, "✓ Login realizado com sucesso!", "success");
-      if (adminLogout) adminLogout.style.display = "inline-flex";
-      renderAdminDashboard();
+      showAdminDashboard();
     } catch (err) {
       showFeedback(adminFeedback, err.message || "Credenciais inválidas.", "error");
     }
@@ -447,90 +461,285 @@ document.addEventListener("DOMContentLoaded", () => {
 
   if (adminLogout) adminLogout.addEventListener("click", () => {
     clearAuth();
-    if (adminLogout) adminLogout.style.display = "none";
-    hideFeedback(adminFeedback);
-    renderDashboardEmpty();
+    hideAdminDashboard();
     updateAuthUI();
   });
 
-  async function renderAdminDashboard() {
-    if (!adminDashBody) return;
-    try {
-      const data = await api("/appointments");
-      const appointments = (data.appointments || []).filter(a => a.status !== "Cancelado");
+  function showAdminDashboard() {
+    if (adminLoginWrap) adminLoginWrap.style.display = "none";
+    if (adminFullDash) adminFullDash.style.display = "block";
+    if (dashGreeting && state.user) dashGreeting.textContent = `Olá, ${state.user.name || "Admin"}`;
+    loadDashboardData();
+    if (window.lucide) lucide.createIcons();
+  }
 
-      if (appointments.length === 0) {
-        adminDashBody.innerHTML = `
+  function hideAdminDashboard() {
+    if (adminLoginWrap) adminLoginWrap.style.display = "block";
+    if (adminFullDash) adminFullDash.style.display = "none";
+    hideFeedback(adminFeedback);
+  }
+
+  function getTodayStr() {
+    const d = new Date();
+    const y = d.getFullYear();
+    const m = String(d.getMonth() + 1).padStart(2, "0");
+    const day = String(d.getDate()).padStart(2, "0");
+    return `${y}-${m}-${day}`;
+  }
+
+  async function loadDashboardData() {
+    try {
+      // Buscar tudo em paralelo
+      const [apptData, loyaltyData, availabilityData] = await Promise.all([
+        api("/appointments"),
+        api("/loyalty"),
+        api(`/availability?date=${getTodayStr()}`),
+      ]);
+
+      const appointments = (apptData.appointments || []).filter(a => a.status !== "Cancelado");
+      const clients = loyaltyData.clients || [];
+      const bookedToday = availabilityData.bookedTimes || [];
+
+      // ═══ Summary Cards ═══
+      const today = getTodayStr();
+      const todayAppointments = appointments.filter(a => {
+        const aDate = a.date ? a.date.split("T")[0] : a.date;
+        return aDate === today;
+      });
+      const availableToday = ALL_TIMES.filter(t => !bookedToday.includes(t));
+      const loyaltyReady = clients.filter(c => c.cuts_completed >= 10).length;
+
+      const elTodayCount = $("#dash-today-count");
+      const elAvailCount = $("#dash-available-count");
+      const elTotalClients = $("#dash-total-clients");
+      const elLoyaltyReady = $("#dash-loyalty-ready");
+
+      if (elTodayCount)   elTodayCount.textContent = todayAppointments.length;
+      if (elAvailCount)   elAvailCount.textContent = availableToday.length;
+      if (elTotalClients) elTotalClients.textContent = clients.length;
+      if (elLoyaltyReady) elLoyaltyReady.textContent = loyaltyReady;
+
+      // ═══ Painel HOJE ═══
+      renderTodayPanel(todayAppointments, availableToday, bookedToday);
+
+      // ═══ Painel AGENDAMENTOS ═══
+      renderAllAppointments(appointments);
+
+      // ═══ Painel FIDELIDADE ═══
+      renderLoyaltyPanel(clients);
+
+      if (window.lucide) lucide.createIcons();
+    } catch (err) {
+      console.error("Erro ao carregar dashboard:", err.message);
+    }
+  }
+
+  function renderTodayPanel(todayAppts, availableSlots, bookedSlots) {
+    const todayContainer = $("#today-appointments");
+    const slotsContainer = $("#today-available-slots");
+
+    if (todayContainer) {
+      if (todayAppts.length === 0) {
+        todayContainer.innerHTML = `
           <div class="admin__empty">
-            <i data-lucide="calendar-x"></i>
-            <p>Nenhum agendamento encontrado.</p>
+            <i data-lucide="coffee"></i>
+            <p>Nenhum agendamento para hoje. Dia tranquilo!</p>
+          </div>`;
+      } else {
+        let html = '<div class="admin__appointments">';
+        todayAppts.forEach(appt => {
+          html += `
+            <div class="appt-card">
+              <div class="appt-card__info">
+                <span class="appt-card__service">${appt.service}</span>
+                <span class="appt-card__details">
+                  🕐 ${appt.time} &nbsp; 👤 ${appt.name} &nbsp; 📞 ${appt.phone}
+                </span>
+                <span class="appt-card__details">R$ ${appt.price}${appt.user_email ? ' &nbsp; ✉ ' + appt.user_email : ''}</span>
+              </div>
+              <div class="appt-card__actions">
+                <span class="appt-card__status">${appt.status}</span>
+              </div>
+            </div>`;
+        });
+        html += '</div>';
+        todayContainer.innerHTML = html;
+      }
+    }
+
+    if (slotsContainer) {
+      let html = '';
+      ALL_TIMES.forEach(t => {
+        const isBooked = bookedSlots.includes(t);
+        html += `<span class="dash__time-slot ${isBooked ? 'dash__time-slot--booked' : 'dash__time-slot--free'}">${t}</span>`;
+      });
+      slotsContainer.innerHTML = html;
+    }
+  }
+
+  function renderAllAppointments(appointments) {
+    const container = $("#all-appointments");
+    if (!container) return;
+
+    if (appointments.length === 0) {
+      container.innerHTML = `
+        <div class="admin__empty">
+          <i data-lucide="calendar-x"></i>
+          <p>Nenhum agendamento encontrado.</p>
+        </div>`;
+      return;
+    }
+
+    let html = '<div class="admin__appointments">';
+    appointments.forEach(appt => {
+      const dateFormatted = appt.date ? appt.date.split("T")[0] : appt.date;
+      html += `
+        <div class="appt-card">
+          <div class="appt-card__info">
+            <span class="appt-card__service">${appt.service}</span>
+            <span class="appt-card__details">
+              📅 ${dateFormatted} &nbsp; 🕐 ${appt.time} &nbsp; 👤 ${appt.name} &nbsp; 📞 ${appt.phone}
+            </span>
+            <span class="appt-card__details">R$ ${appt.price}${appt.user_email ? ' &nbsp; ✉ ' + appt.user_email : ''}</span>
+          </div>
+          <div class="appt-card__actions">
+            <span class="appt-card__status">${appt.status}</span>
+            <button class="btn btn--ghost btn--sm" data-cancel-id="${appt.id}" title="Cancelar agendamento">
+              ✕ Cancelar
+            </button>
+          </div>
+        </div>`;
+    });
+    html += '</div>';
+    container.innerHTML = html;
+
+    $$("[data-cancel-id]", container).forEach(btn => {
+      btn.addEventListener("click", async () => {
+        const id = btn.dataset.cancelId;
+        try {
+          await api(`/appointments/${id}`, { method: "DELETE" });
+          loadDashboardData();
+        } catch (err) {
+          console.error("Erro ao cancelar:", err.message);
+        }
+      });
+    });
+  }
+
+  function renderLoyaltyPanel(clients) {
+    const container = $("#loyalty-clients-list");
+    const searchInput = $("#loyalty-search");
+    if (!container) return;
+
+    function renderClients(filteredClients) {
+      if (filteredClients.length === 0) {
+        container.innerHTML = `
+          <div class="admin__empty">
+            <i data-lucide="users"></i>
+            <p>Nenhum cliente encontrado.</p>
           </div>`;
         if (window.lucide) lucide.createIcons();
         return;
       }
 
-      let html = '<div class="admin__appointments">';
-      appointments.forEach(appt => {
-        const dateFormatted = appt.date ? appt.date.split("T")[0] : appt.date;
+      let html = '';
+      filteredClients.forEach(client => {
+        const cuts = client.cuts_completed || 0;
+        const isComplete = cuts >= 10;
+
+        // Build progress dots
+        let dotsHtml = '';
+        for (let i = 1; i <= 10; i++) {
+          dotsHtml += `<span class="loyalty-dot ${i <= cuts ? 'loyalty-dot--filled' : ''}">${i <= cuts ? '' : i}</span>`;
+        }
+
         html += `
-          <div class="appt-card">
-            <div class="appt-card__info">
-              <span class="appt-card__service">${appt.service}</span>
-              <span class="appt-card__details">
-                📅 ${dateFormatted} &nbsp; 🕐 ${appt.time} &nbsp; 👤 ${appt.name} &nbsp; 📞 ${appt.phone}
-              </span>
-              <span class="appt-card__details">R$ ${appt.price}${appt.user_email ? ' &nbsp; ✉ ' + appt.user_email : ''}</span>
+          <div class="loyalty-card ${isComplete ? 'loyalty-card--complete' : ''}">
+            <div class="loyalty-card__info">
+              <h5>${client.name} ${isComplete ? '🏆' : ''}</h5>
+              <p>${client.email}${client.phone ? ' &nbsp;•&nbsp; ' + client.phone : ''}</p>
+              <div class="loyalty-progress">
+                ${dotsHtml}
+                <span class="loyalty-count">${cuts}/10</span>
+              </div>
             </div>
-            <div style="display:flex;gap:8px;align-items:center;">
-              <span class="appt-card__status">${appt.status}</span>
-              <button class="btn btn--ghost btn--sm" data-cancel-id="${appt.id}" title="Cancelar agendamento">
-                ✕ Cancelar
-              </button>
+            <div class="loyalty-card__actions">
+              ${isComplete
+                ? `<button class="btn btn--gold btn--sm" data-loyalty-claim="${client.user_id}">🎁 Resgatar</button>`
+                : `<button class="btn btn--gold btn--sm" data-loyalty-add="${client.user_id}">+ Corte</button>`
+              }
+              ${cuts > 0
+                ? `<button class="btn btn--ghost btn--sm" data-loyalty-remove="${client.user_id}">- Corte</button>`
+                : ''
+              }
             </div>
           </div>`;
       });
-      html += "</div>";
-      adminDashBody.innerHTML = html;
+      container.innerHTML = html;
 
-      $$("[data-cancel-id]", adminDashBody).forEach(btn => {
+      // Event handlers for loyalty buttons
+      $$("[data-loyalty-add]", container).forEach(btn => {
         btn.addEventListener("click", async () => {
-          const id = btn.dataset.cancelId;
           try {
-            await api(`/appointments/${id}`, { method: "DELETE" });
-            renderAdminDashboard();
+            await api(`/loyalty/${btn.dataset.loyaltyAdd}/cut`, { method: "POST" });
+            loadDashboardData();
           } catch (err) {
-            console.error("Erro ao cancelar:", err.message);
+            console.error("Erro ao adicionar corte:", err.message);
+          }
+        });
+      });
+
+      $$("[data-loyalty-remove]", container).forEach(btn => {
+        btn.addEventListener("click", async () => {
+          try {
+            await api(`/loyalty/${btn.dataset.loyaltyRemove}/remove-cut`, { method: "POST" });
+            loadDashboardData();
+          } catch (err) {
+            console.error("Erro ao remover corte:", err.message);
+          }
+        });
+      });
+
+      $$("[data-loyalty-claim]", container).forEach(btn => {
+        btn.addEventListener("click", async () => {
+          if (!confirm("Confirmar resgate da recompensa? O contador será zerado.")) return;
+          try {
+            await api(`/loyalty/${btn.dataset.loyaltyClaim}/claim`, { method: "POST" });
+            loadDashboardData();
+          } catch (err) {
+            console.error("Erro ao resgatar:", err.message);
           }
         });
       });
 
       if (window.lucide) lucide.createIcons();
-    } catch (err) {
-      adminDashBody.innerHTML = `
-        <div class="admin__empty">
-          <i data-lucide="alert-circle"></i>
-          <p>Erro ao carregar: ${err.message}</p>
-        </div>`;
-      if (window.lucide) lucide.createIcons();
     }
-  }
 
-  function renderDashboardEmpty() {
-    if (!adminDashBody) return;
-    adminDashBody.innerHTML = `
-      <div class="admin__empty">
-        <i data-lucide="lock"></i>
-        <p>Faça login para visualizar e gerenciar os agendamentos.</p>
-      </div>`;
-    if (window.lucide) lucide.createIcons();
+    // Initial render
+    renderClients(clients);
+
+    // Search filter
+    if (searchInput) {
+      searchInput.addEventListener("input", () => {
+        const query = searchInput.value.trim().toLowerCase();
+        if (!query) {
+          renderClients(clients);
+          return;
+        }
+        const filtered = clients.filter(c =>
+          c.name.toLowerCase().includes(query) ||
+          c.email.toLowerCase().includes(query)
+        );
+        renderClients(filtered);
+      });
+    }
   }
 
   /* ═══════════════════════════════════════════════════════
      8 · INIT — restaurar sessão
      ═══════════════════════════════════════════════════════ */
   if (isAdmin()) {
-    if (adminLogout) adminLogout.style.display = "inline-flex";
-    renderAdminDashboard();
+    showAdminDashboard();
   }
   updateAuthUI();
 
