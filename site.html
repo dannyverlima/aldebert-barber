@@ -252,7 +252,87 @@
     </section>
 
     <!-- ══════════════════════════════════════════════════════
-         5 · AGENDAMENTO
+         5A · LOGIN / REGISTRO DE USUÁRIO
+         ══════════════════════════════════════════════════════ -->
+    <section class="section user-auth" id="user-auth">
+      <div class="container">
+        <div class="section__header" data-aos="fade-up">
+          <p class="tag">Área do Cliente</p>
+          <h2>Sua <span class="gold">Conta</span></h2>
+          <p class="section__desc">Faça login ou crie uma conta para agendar mais rápido e acompanhar seus horários.</p>
+        </div>
+
+        <div class="user-auth__grid">
+          <!-- Login Form -->
+          <div id="login-form-wrap" data-aos="fade-right">
+            <form class="booking__form" id="user-login-form">
+              <h3><i data-lucide="log-in"></i> Entrar</h3>
+              <div class="form__group">
+                <label for="u-login-email">E-mail</label>
+                <input type="email" id="u-login-email" placeholder="seu@email.com" required />
+              </div>
+              <div class="form__group">
+                <label for="u-login-pass">Senha</label>
+                <input type="password" id="u-login-pass" placeholder="••••••••" required />
+              </div>
+              <button type="submit" class="btn btn--gold btn--full">
+                <i data-lucide="log-in" class="btn__icon"></i> Entrar
+              </button>
+              <p style="text-align:center;margin-top:14px;font-size:.85rem;color:rgba(245,241,233,.6);">
+                Não tem conta? <a href="#" id="show-register" class="gold" style="font-weight:600;">Criar conta</a>
+              </p>
+            </form>
+          </div>
+
+          <!-- Register Form (hidden by default) -->
+          <div id="register-form-wrap" style="display:none;" data-aos="fade-right">
+            <form class="booking__form" id="user-register-form">
+              <h3><i data-lucide="user-plus"></i> Criar Conta</h3>
+              <div class="form__group">
+                <label for="u-reg-name">Nome completo</label>
+                <input type="text" id="u-reg-name" placeholder="Seu nome" required />
+              </div>
+              <div class="form__group">
+                <label for="u-reg-email">E-mail</label>
+                <input type="email" id="u-reg-email" placeholder="seu@email.com" required />
+              </div>
+              <div class="form__group">
+                <label for="u-reg-phone">Telefone / WhatsApp</label>
+                <input type="tel" id="u-reg-phone" placeholder="(00) 00000-0000" />
+              </div>
+              <div class="form__group">
+                <label for="u-reg-pass">Senha (mín. 6 caracteres)</label>
+                <input type="password" id="u-reg-pass" placeholder="••••••••" required />
+              </div>
+              <button type="submit" class="btn btn--gold btn--full">
+                <i data-lucide="user-plus" class="btn__icon"></i> Criar Conta
+              </button>
+              <p style="text-align:center;margin-top:14px;font-size:.85rem;color:rgba(245,241,233,.6);">
+                Já tem conta? <a href="#" id="show-login" class="gold" style="font-weight:600;">Fazer login</a>
+              </p>
+            </form>
+          </div>
+
+          <!-- Logged in state -->
+          <div id="user-logged-area" style="display:none;" data-aos="fade-right">
+            <div class="booking__form" style="text-align:center;">
+              <i data-lucide="user-check" style="width:48px;height:48px;color:var(--gold);margin-bottom:16px;"></i>
+              <h3>Bem-vindo, <span class="gold" id="user-name-display"></span>!</h3>
+              <p style="margin-bottom:20px;">Você está logado. Seus dados serão preenchidos automaticamente no agendamento.</p>
+              <button class="btn btn--outline" id="user-logout">
+                <i data-lucide="log-out" class="btn__icon"></i> Sair da conta
+              </button>
+            </div>
+          </div>
+
+          <!-- Feedback -->
+          <div class="form__feedback" id="user-feedback" style="grid-column:1/-1;"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ══════════════════════════════════════════════════════
+         5B · AGENDAMENTO
          ══════════════════════════════════════════════════════ -->
     <section class="section booking" id="booking">
       <div class="container booking__grid">
@@ -341,7 +421,7 @@
                 <i data-lucide="log-in" class="btn__icon"></i> Entrar
               </button>
               <div class="form__feedback" id="admin-feedback"></div>
-              <p class="admin__hint">Demo: admin@aldebert.com / Aldebert2026!</p>
+              <p class="admin__hint">Acesso: admin@aldebert.com / Aldebert2026!</p>
             </form>
           </div>
 

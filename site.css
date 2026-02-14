@@ -283,7 +283,13 @@ p  { color:rgba(245,241,233,.78); }
 .gallery__item--wide { grid-column:span 2; }
 
 /* ═══════════════════════════════════════════════════════
-   5 · BOOKING
+   5A · USER AUTH
+   ═══════════════════════════════════════════════════════ */
+.user-auth { background:var(--dark); }
+.user-auth__grid { display:grid; grid-template-columns:1fr; gap:24px; max-width:460px; margin:0 auto; }
+
+/* ═══════════════════════════════════════════════════════
+   5B · BOOKING
    ═══════════════════════════════════════════════════════ */
 .booking { background:var(--charcoal); }
 .booking__grid { display:grid; grid-template-columns:1fr 1fr; gap:56px; align-items:start; }
@@ -499,6 +505,7 @@ select option { background:var(--charcoal); }
   .booking__grid { grid-template-columns:1fr; gap:40px; }
   .admin__grid  { grid-template-columns:1fr; }
   .contact__grid { grid-template-columns:1fr; gap:40px; }
+  .user-auth__grid { max-width:100%; }
   .hero__stats { grid-template-columns:1fr; gap:14px; }
 }
 

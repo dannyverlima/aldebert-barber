@@ -76,17 +76,32 @@ const createAdminIfNotExists = async () => {
 
 const initDatabase = async () => {
   try {
+    // Tabela de administradores
     await query(`
       CREATE TABLE IF NOT EXISTS admins (
         id SERIAL PRIMARY KEY,
         email TEXT NOT NULL UNIQUE,
         password_hash TEXT NOT NULL,
-        name TEXT
+        name TEXT NOT NULL DEFAULT 'Admin',
+        created_at TIMESTAMP NOT NULL DEFAULT NOW()
       )
     `);
+    // Tabela de usuários (clientes)
+    await query(`
+      CREATE TABLE IF NOT EXISTS users (
+        id SERIAL PRIMARY KEY,
+        name TEXT NOT NULL,
+        email TEXT NOT NULL UNIQUE,
+        phone TEXT,
+        password_hash TEXT NOT NULL,
+        created_at TIMESTAMP NOT NULL DEFAULT NOW()
+      )
+    `);
+    // Tabela de agendamentos
     await query(`
       CREATE TABLE IF NOT EXISTS appointments (
         id SERIAL PRIMARY KEY,
+        user_id INTEGER REFERENCES users(id) ON DELETE SET NULL,
         service TEXT NOT NULL,
         date DATE NOT NULL,
         time TEXT NOT NULL,
@@ -98,11 +113,10 @@ const initDatabase = async () => {
         UNIQUE (date, time)
       )
     `);
-    console.log("✓ Tabelas do banco criadas/verificadas");
+    console.log("✓ Tabelas do banco criadas (admins, users, appointments)");
   } catch (err) {
     console.error("✕ Erro ao inicializar banco de dados:", err.message);
     console.log("⚠ O servidor continuará rodando sem banco de dados.");
-    console.log("  O frontend funciona normalmente com localStorage.");
   }
 };
 

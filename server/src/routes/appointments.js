@@ -1,7 +1,7 @@
 import { Router } from "express";
 import { z } from "zod";
 import { query } from "../db.js";
-import { authenticate } from "../middleware/auth.js";
+import { authenticate, requireAdmin } from "../middleware/auth.js";
 
 const router = Router();
 
@@ -14,6 +14,7 @@ const appointmentSchema = z.object({
   price: z.number().positive(),
 });
 
+/* ─── Horários disponíveis (público) ─── */
 router.get("/availability", async (req, res) => {
   const { date } = req.query;
   if (!date) {
@@ -31,6 +32,7 @@ router.get("/availability", async (req, res) => {
   }
 });
 
+/* ─── Criar agendamento (público ou logado) ─── */
 router.post("/appointments", async (req, res) => {
   const parse = appointmentSchema.safeParse(req.body);
   if (!parse.success) {
@@ -38,10 +40,23 @@ router.post("/appointments", async (req, res) => {
   }
 
   const { service, date, time, name, phone, price } = parse.data;
+
+  // Se tiver token, vincula ao user_id
+  let userId = null;
+  const header = req.headers.authorization || "";
+  const token = header.replace("Bearer ", "").trim();
+  if (token) {
+    try {
+      const jwt = await import("jsonwebtoken");
+      const decoded = jwt.default.verify(token, process.env.JWT_SECRET);
+      if (decoded.role === "user") userId = decoded.id;
+    } catch (_) { /* sem token válido, continua sem user_id */ }
+  }
+
   try {
     const result = await query(
-      "INSERT INTO appointments (service, date, time, name, phone, price) VALUES ($1, $2, $3, $4, $5, $6) RETURNING *",
-      [service, date, time, name, phone, price]
+      "INSERT INTO appointments (user_id, service, date, time, name, phone, price) VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING *",
+      [userId, service, date, time, name, phone, price]
     );
     return res.status(201).json({ appointment: result.rows[0] });
   } catch (error) {
@@ -49,10 +64,25 @@ router.post("/appointments", async (req, res) => {
   }
 });
 
-router.get("/appointments", authenticate, async (req, res) => {
+/* ─── Meus agendamentos (usuário logado) ─── */
+router.get("/my-appointments", authenticate, async (req, res) => {
   try {
     const result = await query(
-      "SELECT * FROM appointments ORDER BY date ASC, time ASC"
+      "SELECT * FROM appointments WHERE user_id = $1 ORDER BY date ASC, time ASC",
+      [req.user.id]
+    );
+    return res.json({ appointments: result.rows });
+  } catch (err) {
+    console.error("Erro ao listar meus agendamentos:", err.message);
+    return res.status(500).json({ message: "Erro interno do servidor" });
+  }
+});
+
+/* ─── Todos os agendamentos (admin apenas) ─── */
+router.get("/appointments", authenticate, requireAdmin, async (req, res) => {
+  try {
+    const result = await query(
+      "SELECT a.*, u.email as user_email FROM appointments a LEFT JOIN users u ON a.user_id = u.id ORDER BY date ASC, time ASC"
     );
     return res.json({ appointments: result.rows });
   } catch (err) {
@@ -61,10 +91,23 @@ router.get("/appointments", authenticate, async (req, res) => {
   }
 });
 
-router.delete("/appointments/:id", authenticate, async (req, res) => {
+/* ─── Cancelar agendamento (admin) ─── */
+router.delete("/appointments/:id", authenticate, requireAdmin, async (req, res) => {
   try {
     const { id } = req.params;
-    await query("DELETE FROM appointments WHERE id = $1", [id]);
+    await query("UPDATE appointments SET status = 'Cancelado' WHERE id = $1", [id]);
+    return res.json({ message: "Agendamento cancelado" });
+  } catch (err) {
+    console.error("Erro ao cancelar agendamento:", err.message);
+    return res.status(500).json({ message: "Erro interno do servidor" });
+  }
+});
+
+/* ─── Cancelar próprio agendamento (usuário) ─── */
+router.delete("/my-appointments/:id", authenticate, async (req, res) => {
+  try {
+    const { id } = req.params;
+    await query("UPDATE appointments SET status = 'Cancelado' WHERE id = $1 AND user_id = $2", [id, req.user.id]);
     return res.json({ message: "Agendamento cancelado" });
   } catch (err) {
     console.error("Erro ao cancelar agendamento:", err.message);
