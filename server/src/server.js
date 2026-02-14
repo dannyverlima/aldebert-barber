@@ -11,10 +11,10 @@ import appointmentsRoutes from "./routes/appointments.js";
 import loyaltyRoutes from "./routes/loyalty.js";
 import { query } from "./db.js";
 
-dotenv.config();
-
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
+
+dotenv.config({ path: path.join(__dirname, "..", ".env") });
 const frontendPath = path.join(__dirname, "..", "..");
 
 const app = express();

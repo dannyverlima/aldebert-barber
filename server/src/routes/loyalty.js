@@ -4,6 +4,26 @@ import { authenticate, requireAdmin } from "../middleware/auth.js";
 
 const router = Router();
 
+/* ─── Minha fidelidade (usuário logado) — DEVE VIR ANTES DE /:userId ─── */
+router.get("/me", authenticate, async (req, res) => {
+  try {
+    const result = await query(`
+      SELECT COALESCE(l.cuts_completed, 0) AS cuts_completed,
+             COALESCE(l.reward_claimed, false) AS reward_claimed
+      FROM users u
+      LEFT JOIN loyalty l ON l.user_id = u.id
+      WHERE u.id = $1
+    `, [req.user.id]);
+    if (!result.rows.length) {
+      return res.json({ cuts_completed: 0, reward_claimed: false });
+    }
+    return res.json(result.rows[0]);
+  } catch (err) {
+    console.error("Erro ao buscar minha fidelidade:", err.message);
+    return res.status(500).json({ message: "Erro interno do servidor" });
+  }
+});
+
 /* ─── Listar todos os clientes com fidelidade (admin) ─── */
 router.get("/", authenticate, requireAdmin, async (req, res) => {
   try {
@@ -89,26 +109,6 @@ router.post("/:userId/claim", authenticate, requireAdmin, async (req, res) => {
     return res.json({ loyalty: result.rows[0], message: "Recompensa resgatada! Contador zerado." });
   } catch (err) {
     console.error("Erro ao resgatar recompensa:", err.message);
-    return res.status(500).json({ message: "Erro interno do servidor" });
-  }
-});
-
-/* ─── Minha fidelidade (usuário logado) ─── */
-router.get("/me", authenticate, async (req, res) => {
-  try {
-    const result = await query(`
-      SELECT COALESCE(l.cuts_completed, 0) AS cuts_completed,
-             COALESCE(l.reward_claimed, false) AS reward_claimed
-      FROM users u
-      LEFT JOIN loyalty l ON l.user_id = u.id
-      WHERE u.id = $1
-    `, [req.user.id]);
-    if (!result.rows.length) {
-      return res.json({ cuts_completed: 0, reward_claimed: false });
-    }
-    return res.json(result.rows[0]);
-  } catch (err) {
-    console.error("Erro ao buscar minha fidelidade:", err.message);
     return res.status(500).json({ message: "Erro interno do servidor" });
   }
 });

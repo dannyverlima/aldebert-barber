@@ -103,8 +103,10 @@ document.addEventListener("DOMContentLoaded", () => {
 
   function todayStr() {
     const d = new Date();
-    d.setDate(d.getDate() + 1);
-    return d.toISOString().split("T")[0];
+    const y = d.getFullYear();
+    const m = String(d.getMonth() + 1).padStart(2, "0");
+    const day = String(d.getDate()).padStart(2, "0");
+    return `${y}-${m}-${day}`;
   }
 
   /* ═══════════════════════════════════════════════════════
@@ -530,12 +532,16 @@ document.addEventListener("DOMContentLoaded", () => {
 
   async function loadDashboardData() {
     try {
-      // Buscar tudo em paralelo
-      const [apptData, loyaltyData, availabilityData] = await Promise.all([
+      // Buscar tudo em paralelo (com fallback individual)
+      const [apptData, loyaltyData, availabilityData] = await Promise.allSettled([
         api("/appointments"),
         api("/loyalty"),
         api(`/availability?date=${getTodayStr()}`),
-      ]);
+      ]).then(results => results.map((r, i) => {
+        if (r.status === "fulfilled") return r.value;
+        console.warn(`Dashboard: falha ao carregar dados (${i}):`, r.reason?.message);
+        return i === 0 ? { appointments: [] } : i === 1 ? { clients: [] } : { bookedTimes: [] };
+      }));
 
       const appointments = (apptData.appointments || []).filter(a => a.status !== "Cancelado");
       const clients = loyaltyData.clients || [];
@@ -596,10 +602,10 @@ document.addEventListener("DOMContentLoaded", () => {
                 <span class="appt-card__details">
                   🕐 ${appt.time} &nbsp; 👤 ${appt.name} &nbsp; 📞 ${appt.phone}
                 </span>
-                <span class="appt-card__details">R$ ${appt.price}${appt.user_email ? ' &nbsp; ✉ ' + appt.user_email : ''}</span>
+                <span class="appt-card__details">R$ ${appt.price || 0}${appt.user_email ? ' &nbsp; ✉ ' + appt.user_email : ''}</span>
               </div>
               <div class="appt-card__actions">
-                <span class="appt-card__status">${appt.status}</span>
+                <span class="appt-card__status">${appt.status || 'Confirmado'}</span>
               </div>
             </div>`;
         });
@@ -641,10 +647,10 @@ document.addEventListener("DOMContentLoaded", () => {
             <span class="appt-card__details">
               📅 ${dateFormatted} &nbsp; 🕐 ${appt.time} &nbsp; 👤 ${appt.name} &nbsp; 📞 ${appt.phone}
             </span>
-            <span class="appt-card__details">R$ ${appt.price}${appt.user_email ? ' &nbsp; ✉ ' + appt.user_email : ''}</span>
+            <span class="appt-card__details">R$ ${appt.price || 0}${appt.user_email ? ' &nbsp; ✉ ' + appt.user_email : ''}</span>
           </div>
           <div class="appt-card__actions">
-            <span class="appt-card__status">${appt.status}</span>
+            <span class="appt-card__status">${appt.status || 'Confirmado'}</span>
             <button class="btn btn--ghost btn--sm" data-cancel-id="${appt.id}" title="Cancelar agendamento">
               ✕ Cancelar
             </button>
@@ -783,6 +789,14 @@ document.addEventListener("DOMContentLoaded", () => {
     showAdminDashboard();
   }
   updateAuthUI();
+
+  // Preencher dados do booking se user já está logado
+  if (isUser() && state.user) {
+    const bNameEl = $("#b-name");
+    const bPhoneEl = $("#b-phone");
+    if (bNameEl && state.user.name) bNameEl.value = state.user.name;
+    if (bPhoneEl && state.user.phone) bPhoneEl.value = state.user.phone;
+  }
 
   /* ═══════════════════════════════════════════════════════
      9 · RE-INIT LUCIDE
